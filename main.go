@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"github.com/JinHyukParkk/randomProject/route"
+)
 
 func main() {
-	fmt.Printf("hello\n")
+	router := route.Init()
+	router.Start(":8080")
 }
+
