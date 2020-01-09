@@ -39,6 +39,8 @@ func Init() *echo.Echo {
 		v1.GET("/search", api.GetList())
 		// v1.GET("/members/:id", api.GetMember())
 	}
+
+	e.GET("/test", api.Test())
 	return e
 }
 

@@ -10,3 +10,7 @@ func GetList() echo.HandlerFunc {
 	// 	return '{id="11"}';
 	// }
 }
+
+func Test() {
+	return "test"
+}
