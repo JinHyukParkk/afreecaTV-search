@@ -1,5 +1,9 @@
 <template>
-    <div>리스트야 나와라</div>
+    <div id="ground">
+      <div id="content"></div>
+      <div id="aside"></div>
+      <button type="button" class="btn_top" id="top_button" style="display: none;">top</button>
+    </div>
 </template>
 
 <script>
