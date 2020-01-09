@@ -12,8 +12,8 @@
         </h3>
         <fieldset>
           <legend>검색 폼</legend>
-          <input type="text" name="szKeyword" id="szKeyword" title="검색어 입력" class="search_bar">
-          <a href="javascript:;" title="검색" class="btn_search">검색</a>
+          <input type="text" name="szKeyword" id="szKeyword" title="검색어 입력" class="search_bar" @keyup.enter="search">
+          <a href="javascript:;" title="검색" class="btn_search" @click="search">검색</a>
           <div class="sear_auto" id="divSearchAuto" style="display:none;"></div>
           <div class="mysch" style="display:none;"></div>
           <div class="livesch" style="display:none;"></div>
@@ -28,6 +28,13 @@ export default {
   data () {
     return {
       msg: '재원공주다'
+    }
+  },
+  methods: {
+    search () {
+      this.$http.get('http://localhost:8080/search').then((res) => {
+        console.log('result:', res.data)
+      })
     }
   }
 }

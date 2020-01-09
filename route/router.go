@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"github.com/labstack/echo"
 	echoMw "github.com/labstack/echo/middleware"
+	"github.com/JinHyukParkk/CapstoneProject/api"
 )
 
 func Init() *echo.Echo {
@@ -32,12 +33,12 @@ func Init() *echo.Echo {
 	// e.Use(myMw.TransactionHandler(db.Init()))
 
 	// Routes
-	// v1 := e.Group("/api/v1")
-	// {
-		// v1.POST("/members", api.PostMember())
-		// v1.GET("/members", api.GetMembers())
+	v1 := e.Group("/api/v1")
+	{
+		// v1.POST("/search", api.PostMember())
+		v1.GET("/search", api.GetList())
 		// v1.GET("/members/:id", api.GetMember())
-	// }
+	}
 	return e
 }
 
