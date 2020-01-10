@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     search () {
-      this.$http.get('http://203.238.139.11/:8080/search').then((res) => {
+      this.$http.get('http://203.238.139.11:8080/test').then((res) => {
         console.log('result:', res.data)
       })
     }
