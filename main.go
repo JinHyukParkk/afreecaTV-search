@@ -6,6 +6,6 @@ import (
 
 func main() {
 	router := route.Init()
-	router.Logger.Debug(router.Start("0.0.0.0:8080"))
+	router.Logger.Debug(router.Start(":8080"))
 }
 

@@ -12,7 +12,7 @@ func Init() *echo.Echo {
 
 	e := echo.New()
 
-	e.Debug()
+	// e.Debug()
 
 	// Set Bundle MiddleWare
 	e.Use(echoMw.Logger())
@@ -33,14 +33,15 @@ func Init() *echo.Echo {
 	// e.Use(myMw.TransactionHandler(db.Init()))
 
 	// Routes
-	// v1 := e.Group("/api/v1")
-	// {
-	// 	// v1.POST("/search", api.PostMember())
-	// 	v1.GET("/search", api.GetList())
-	// 	// v1.GET("/members/:id", api.GetMember())
-	// }
+	v1 := e.Group("/api/v1")
+	{
+		// v1.POST("/search", api.PostMember())
+		v1.GET("/search", api.GetList)
+		// v1.GET("/members/:id", api.GetMember())
+	}
 
-	e.GET("/test", api.Test())
+	e.GET("/test", api.Test)
+	e.GET("/test1", api.Test1())
 	e.GET("/ping", func(c echo.Context) error {
         return c.String(200, "test")
 	})
