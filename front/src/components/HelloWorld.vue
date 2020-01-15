@@ -1,9 +1,8 @@
 <template>
-  <p>마이게 이잉이이</p>
+  <p>{{ msg }}</p>
 </template>
 
 <script>
-
 export default {
   name: 'HelloWorld',
   data () {

@@ -3,6 +3,7 @@
     <p>Vue 테스트 서버</p>
     <AfHeader></AfHeader>
     <AfList><AfList>
+    <router-view></router-view>
   </div>
 </template>
 
