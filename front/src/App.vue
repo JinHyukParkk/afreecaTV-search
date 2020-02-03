@@ -1,9 +1,8 @@
 <template>
-  <div id="app">
-    <p>Vue 테스트 서버</p>
+  <div id="search_content">
+    <router-view></router-view>
     <AfHeader></AfHeader>
     <AfList><AfList>
-    <router-view></router-view>
   </div>
 </template>
 
@@ -16,6 +15,11 @@ export default {
   components: {
     'AfHeader': AfHeader,
     'AfList': AfList
+  },
+  data () {
+    return {
+      msg: 'Vue 태스트'
+    }
   }
 }
 </script>

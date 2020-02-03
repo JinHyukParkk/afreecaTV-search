@@ -9,6 +9,14 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js Appqwe'
     }
+  },
+  created: function () {
+    this.setting()
+  },
+  methods: {
+    setting () {
+      console.log('11')
+    }
   }
 }
 </script>

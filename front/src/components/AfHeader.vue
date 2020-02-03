@@ -1,49 +1,43 @@
 <template>
-  <div id="header">
-    <div id="gArea">
-      <h1>
-        <a href="//www.afreecatv.com" target="_top">afreecaTV</a>
-      </h1>
-    </div>
-    <div class="gnb_wrap">
-      <div class="search_area">
-        <h3>
-          <a href=".">검색</a>
-        </h3>
-        <fieldset>
-          <legend>검색 폼</legend>
-          <input type="text" v-model="keyword" name="szKeyword" id="szKeyword" title="검색어 입력" class="search_bar" @keyup="autoJaso" @click=checkLive(keyword)>
-          <a href="javascript:;" title="검색" class="btn_search" @click="search(keyword)">검색</a>
-          <!-- 자동 완성 -->
-          <div class="sear_auto" id="divSearchAuto" v-if="auto">
-            <ul>
-              <li v-for="oData in list" v-bind:key="oData">
-                <a :href="searchUrl(oData.d)">{{oData.d}}</a>
-              </li>
-            </ul>
-          </div>
-          <!-- 최근 검색어 -->
-          <div class="mysch" v-if="mysch">
-            {{ list }}
-          </div>
-          <!-- 실시간 검색어 -->
-          <div class="livesch" v-if="live">
-            <p class="stitle">실시간 인기 검색어</p>
-            <ul  v-for="(oData, nIndex) in list" v-bind:key="oData">
-              <li>
-                <a :href="searchUrl(oData.keyword)">
-                <em>{{ (nIndex+1) }}</em>
-                <span class="tit">{{ oData.keyword }}</span>
-                <span class="rank">
-                  <span :class="liveKeywordList(oData.updown, oData.show_text)">{{ oData.show_text }}</span>
+  <div class="gnb_wrap">
+    <div class="search_area">
+      <h3>
+        <a href=".">검색</a>
+      </h3>
+      <fieldset>
+        <legend>검색 폼</legend>
+        <input type="text" v-model="keyword" name="szKeyword" id="szKeyword" title="검색어 입력" class="search_bar" @keyup="autoJaso" @click=checkLive(keyword)>
+        <a href="javascript:;" title="검색" class="btn_search" @click="search(keyword)">검색</a>
+        <!-- 자동 완성 -->
+        <div class="sear_auto" id="divSearchAuto" v-if="auto">
+          <ul>
+            <li v-for="oData in list" v-bind:key="oData">
+              <a :href="searchUrl(oData.d)">{{oData.d}}</a>
+            </li>
+          </ul>
+        </div>
+        <!-- 최근 검색어 -->
+        <div class="mysch" v-if="mysch">
+          {{ list }}
+        </div>
+        <!-- 실시간 검색어 -->
+        <div class="livesch" v-if="live">
+          <p class="stitle">실시간 인기 검색어</p>
+          <ul  v-for="(oData, nIndex) in list" v-bind:key="oData">
+            <li>
+              <a :href="searchUrl(oData.keyword)">
+              <em>{{ (nIndex+1) }}</em>
+              <span class="tit">{{ oData.keyword }}</span>
+              <span class="rank">
+                <span :class="liveKeywordList(oData.updown, oData.show_text)">{{ oData.show_text }}</span>
 
-                </span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </fieldset>
-      </div>
+              </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </fieldset>
+    </div>
   </div>
 </template>
 
@@ -57,7 +51,8 @@ export default {
       mysch: false,
       auto: false,
       live: false,
-      keyword: ''
+      keyword: '',
+      ticket: ''
     }
   },
   methods: {
@@ -95,7 +90,7 @@ export default {
       location.href = '//search.afreecatv.com?keyword=' + e
     },
     setting () {
-      console.log('이건 머야')
+      this.keyword = this.$route.query.keyword
     },
     searchUrl (szKeyword) {
       return '?keyword=' + szKeyword
