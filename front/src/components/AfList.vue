@@ -1,7 +1,7 @@
 <template>
     <div id="ground">
       <div id="content">
-        <div class="relate_wrap" id="divSearchRelate">
+        <div class="relate_wrap" id="divSearchRelate" v-if="related">
           <h4>연관검색어</h4>
           <ul>
             <li v-for="oData in relatedList" v-bind:key="oData">
@@ -21,10 +21,8 @@ export default {
   data () {
     return {
       msg: '재원공주다',
+      related: false,
       relatedList: '',
-      mysch: false,
-      auto: false,
-      live: false,
       keyword: '',
       ticket: ''
     }
@@ -43,9 +41,11 @@ export default {
       this.$http.get('//scketc.afreecatv.com/api.php', {
         params: params
       }).then((res) => {
-        this.relatedList = res.data.list
-        this.live = false
-        this.auto = true
+        if (res.data.list.length !== 0) {
+          console.log(res.data.list)
+          this.relatedList = res.data.list
+          this.related = true
+        }
       })
     },
     setting () {

@@ -1,7 +1,9 @@
 <template>
   <div id="search_content">
     <router-view></router-view>
-    <AfHeader></AfHeader>
+    <div>
+      <AfHeader></AfHeader>
+    </div>
     <AfList><AfList>
   </div>
 </template>
