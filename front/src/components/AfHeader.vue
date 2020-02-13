@@ -64,7 +64,6 @@ export default {
   name: 'afHeader',
   data () {
     return {
-      msg: '재원공주다',
       list: '',
       mysch: false,
       auto: false,
@@ -111,7 +110,7 @@ export default {
       this.keyword = this.$route.query.keyword
     },
     searchUrl (szKeyword) {
-      return '?keyword=' + szKeyword
+      return '?keyword=' + encodeURIComponent(szKeyword)
     },
     checkLive (szKeyword) {
       if (szKeyword) {
@@ -165,14 +164,18 @@ export default {
 <style>
 #header {
   height: 50px;
+  width:100%;
+  margin:0 auto;
+  padding-bottom:2px;
 }
 .thema_dark #search #header {
   border-bottom: 0 solid #000;
+  padding-bottom: 2px;
 }
 body.thema_dark #search_content .search_area h3, body.thema_dark #search_content .search_area h3 a {
     color: #fff;
 }
-#search_content .search_area h3, #search_content .search_area h3 a {
+.thema_dark #search_content .search_area h3, .thema_dark #search_content .search_area h3 a {
     float: left;
     background: none;
     padding: 0;
@@ -197,7 +200,11 @@ body.thema_dark #search_content .search_area h3, body.thema_dark #search_content
   margin: 0;
 }
 .gnb_wrap {
+  border-bottom: 1px solid #4279ff;
+}
+.thema_dark .gnb_wrap {
   background: #1b1b1c;
+  border-bottom: 1px solid #000;
 }
 .search_area {
   position: relative;
