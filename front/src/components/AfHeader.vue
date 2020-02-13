@@ -254,8 +254,14 @@ body.thema_dark #search_content .search_area h3, body.thema_dark #search_content
 #menu .menu.text li a:hover {color:#4279ff;}
 #menu .menu.text li a:hover .target_blank { border-left-color:#4279ff;}
 #menu .menu.text li.on a{height: 30px;margin-bottom: -1px;color: #4279ff;border-bottom: 4px solid #4279ff;}
-.thema_dark > p.stitle {
-    color: #c8c8c8;
-    border-bottom: 1px solid #1d1d1d;
-}
+
+/*어두운 모드*/
+.thema_dark > p.stitle {color: #c8c8c8;border-bottom: 1px solid #1d1d1d;}
+.thema_dark #search_content #menu .menu.text li a {color: #c8c8c8;}
+.thema_dark #search_content #menu .menu.text li .target_blank { display: inline-block; width: 0; height: 0; margin: 0 0 0 5px; vertical-align: 2px;  *vertical-align: 5px;  border-top: 3px solid transparent; border-bottom: 3px solid transparent; border-left: 3px solid #999; }
+.thema_dark #search_content #menu .menu.text li a:active,
+.thema_dark #search_content #menu .menu.text li a:visited {color:inherit; color: #333; }
+.thema_dark #search_content #menu .menu.text li a:hover {color:#4279ff;}
+.thema_dark #search_content #menu .menu.text li a:hover .target_blank { border-left-color:#4279ff;}
+.thema_dark #search_content #menu .menu.text li.on a{height: 30px;margin-bottom: -1px;color: #4279ff;border-bottom: 4px solid #4279ff;}
 </style>
