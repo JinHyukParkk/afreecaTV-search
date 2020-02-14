@@ -9,22 +9,7 @@
             </li>
           </ul>
         </div>
-        <div class="main_con">
-          <p class="result"><em>"<span id="searchword">{{ keyword }}</span>"</em>에 대한 통합검색 결과 입니다. (<span id="total_cnt">{{ totalCnt }}</span>건)</p>
-        </div>
-        <div id="broad_order_sec" class="tit_area" style="">
-            <h4 id="broad_title_text"><a href="javascript:;">생방송</a><span id="broad_cnt">({{ liveCnt }})</span><img src="//res.afreecatv.com/images/aftv_search/ico_live.gif" alt="live"></h4>
-            <div class="select_v">
-                <a href="javascript:;" class="v" id="broad_order_text"><strong>정확도순</strong><em></em></a>
-                <ul class="sub_list" style="display: none;">
-                <li><a href="javascript:;">정확도순</a></li>
-                <li><a href="javascript:;">시청인원순</a></li>
-                <li><a href="javascript:;">최신순</a></li>
-                <li><a href="javascript:;">고화질순</a></li>
-                <li><a href="javascript:;" class="last">고해상도순</a></li>
-                </ul>
-            </div>
-        </div>
+        <router-view/>
       </div>
       <div class="aside">
         <!--연관검색 BJ리스트-->
@@ -78,7 +63,6 @@ export default {
       recommend: true,
       recommendList: '',
       keyword: '',
-      totalCnt: 0,
       liveCnt: 0
     }
   },
@@ -115,7 +99,7 @@ export default {
       this.$http.get('//scketc.afreecatv.com/api.php', {
         params: params
       }).then((res) => {
-        if (res.data.RELATED.length !== 0) {
+        if (res.data.RELATED !== null) {
           this.tagList = res.data.RELATED
           this.tag = true
         }

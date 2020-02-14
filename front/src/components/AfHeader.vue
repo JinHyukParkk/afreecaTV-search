@@ -7,7 +7,7 @@
       <fieldset>
         <legend>검색 폼</legend>
         <input type="text" v-model="keyword" name="szKeyword" id="szKeyword" title="검색어 입력" class="search_bar" @keyup="autoJaso" @click=checkLive(keyword)>
-        <a href="javascript:;" title="검색" class="btn_search" @click="search(keyword)">검색</a>
+        <a title="검색" class="btn_search" @click="search(keyword)">검색</a>
         <!-- 자동 완성 -->
         <div class="sear_auto" id="divSearchAuto" v-if="auto" v-click-outside="hide">
           <ul>
@@ -39,20 +39,20 @@
     </div>
     <div id="menu">
       <ul class="menu text">
-        <li class="on" id="li_total">
-          <a href="javascript:;" target="_top">통합검색</a>
+        <li :class="$store.state.onTab.totalSearch" id="li_total">
+          <router-link :to="tabMoveLink('')">통합검색</router-link>
         </li>
-        <li class="" id="li_broad">
-          <a href="javascript:;" target="_top">생방송</a>
+        <li :class="$store.state.onTab.live" id="li_broad">
+          <router-link :to="tabMoveLink('live')">생방송</router-link>
         </li>
-        <li class="" id="li_video">
-          <a href="javascript:;" target="_top">VOD</a>
+        <li :class="$store.state.onTab.vod" id="li_video">
+          <router-link :to="tabMoveLink('vod')">VOD</router-link>
         </li>
-        <li class="" id="li_posts">
-          <a href="javascript:;" target="_top">게시글</a>
+        <li :class="$store.state.onTab.post" id="li_posts">
+          <router-link :to="tabMoveLink('post')">게시글</router-link>
         </li>
-        <li class="" id="li_bj">
-          <a href="javascript:;" target="_top">BJ</a>
+        <li :class="$store.state.onTab.bj" id="li_bj">
+          <router-link :to="tabMoveLink('bj')">BJ</router-link>
         </li>
       </ul>
     </div>
@@ -103,18 +103,21 @@ export default {
         })
       }
     },
-    search (e) {
-      location.href = '//search.afreecatv.com?keyword=' + e
+    search (keyword) {
+      location.href = '//search.afreecatv.com?keyword=' + keyword
     },
     setting () {
       this.keyword = this.$route.query.keyword
+      let szTab = this.$route.path.replace('/', '')
+      szTab = szTab === '' ? 'totalSearch' : szTab
+
+      this.$store.dispatch('callSetCurrentTab', { tab: szTab })
     },
     searchUrl (szKeyword) {
       return '?keyword=' + encodeURIComponent(szKeyword)
     },
     checkLive (szKeyword) {
       if (szKeyword) {
-
       } else {
         let params = {}
         params['m'] = 'hotKeyword'
@@ -146,6 +149,14 @@ export default {
       this.auto = false
       this.live = false
       this.mysch = false
+    },
+    tabMoveLink (type) {
+      return {
+        path: '/' + type,
+        query: {
+          keyword: this.keyword
+        }
+      }
     }
   },
   created: function () {

@@ -1,25 +1,38 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Vuex from 'vuex'
+import 'es6-promise/auto'
+import TotalSearch from '@/components/tab/TotalSearch'
+import Live from '@/components/tab/Live'
+import Vod from '@/components/tab/Vod'
+import Post from '@/components/tab/Post'
+import Bj from '@/components/tab/Bj'
 
 Vue.use(Router)
-
-const NotFound = {template: '<div>Not Found</div>'}
+Vue.use(Vuex)
 
 export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/:keyword',
-      name: 'Search',
-      component: {
-        HelloWorld: HelloWorld
-      }
+      path: '/',
+      component: TotalSearch
+    },
+    {
+      path: '/live',
+      component: Live
     },
     {
       path: '/vod',
-      name: 'Test',
-      component: NotFound
+      component: Vod
+    },
+    {
+      path: '/post',
+      component: Post
+    },
+    {
+      path: '/bj',
+      component: Bj
     }
   ]
 })

@@ -4,10 +4,10 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Vod',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js Appqwe'
+      msg: 'Vod 페이지'
     }
   },
   created: function () {
@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     setting () {
-      console.log('11')
+      this.$store.dispatch('callChangeTab', { tab: 'vod' })
     }
   }
 }

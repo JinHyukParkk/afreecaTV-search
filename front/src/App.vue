@@ -1,9 +1,6 @@
 <template>
   <div id="search_content">
-    <router-view></router-view>
-    <div>
-      <AfHeader></AfHeader>
-    </div>
+    <AfHeader></AfHeader>
     <AfList><AfList>
   </div>
 </template>
@@ -17,11 +14,6 @@ export default {
   components: {
     'AfHeader': AfHeader,
     'AfList': AfList
-  },
-  data () {
-    return {
-      msg: 'Vue 태스트'
-    }
   }
 }
 </script>

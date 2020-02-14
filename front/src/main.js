@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 import axios from 'axios'
 import vueCookies from 'vue-cookies'
 
@@ -12,7 +13,8 @@ Vue.prototype.$cookies = vueCookies
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#search_content',
+  // el: '',
   render: h => h(App),
-  router
-})
+  router,
+  store: store
+}).$mount('#search_content')
