@@ -8,12 +8,35 @@ import (
 	"github.com/JinHyukParkk/randomProject/api"
 )
 
-func Init() *echo.Echo {
+type (
+	Host struct {
+		Echo *echo.Echo
+	}
+)
 
-	e := echo.New()
+func Init() *echo.Echo {
+	// Hosts
+	hosts := map[string]*Host{}
+
+	//-----
+	// API
+	//-----
+
+	searchapi := echo.New()
+	searchapi.Use(echoMw.Logger())
+	searchapi.Use(echoMw.Recover())
+
+	//SubDomain
+	hosts["searchapi.afreecatv.com:8080"] = &Host{searchapi}
+
+	searchapi.GET("/test", api.Test)
+	searchapi.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "API")
+	})
 
 	// e.Debug()
 
+	e := echo.New()
 	// Set Bundle MiddleWare
 	e.Use(echoMw.Logger())
 	e.Use(echoMw.Recover())

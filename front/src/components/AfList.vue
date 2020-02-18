@@ -83,6 +83,8 @@ export default {
         if (res.data.list.length !== 0) {
           this.relatedList = res.data.list
           this.related = true
+        } else {
+          this.related = false
         }
       })
     },
@@ -99,9 +101,11 @@ export default {
       this.$http.get('//scketc.afreecatv.com/api.php', {
         params: params
       }).then((res) => {
-        if (res.data.RELATED !== null) {
+        if (res.data.RELATED && res.data.RELATED.length !== 0) {
           this.tagList = res.data.RELATED
           this.tag = true
+        } else {
+          this.tag = false
         }
       })
     },
@@ -114,6 +118,8 @@ export default {
         if (oResJson.LISTS[0].LIST.length !== 0) {
           this.recommendList = oResJson.LISTS[0].LIST
           this.recommend = true
+        } else {
+          this.recommend = false
         }
       })
     },
