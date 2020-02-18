@@ -222,6 +222,8 @@ body.thema_dark #search_content .search_area h3, body.thema_dark #search_content
   width: 960px;
   height: 37px;
   margin: 0 auto 0;
+  margin-bottom: 20px;
+
 }
 #menu {
   margin: 0 auto 0;
