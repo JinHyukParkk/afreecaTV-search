@@ -12,7 +12,7 @@
             <div class="img_thum">
               <img :src="profileList.img_file" width="200" height="150" alt="" onerror="//res.afreecatv.com/images/main_new/@thum_s_104x76.gif">
               <p>
-                <a href="javascript:void(0);">
+                <a href="javascript:void(0);" @click="favorite(profileList.user_id)">
                   <img src="//res.afreecatv.com/images/aftv_search/btn_fa.gif" class="btn_f" alt="즐겨찾기">
                 </a>
               </p>
@@ -25,7 +25,7 @@
                 <span class="ico_fan">팬</span>
               </dt>
               <dd>
-                <em>출생</em>{{ profileList.born_year + '년생(' + profileList.user_age + '세)' }}
+                <em>출생</em>{{ profileList.born_year + '년생 (' + profileList.user_age + '세)' }}
               </dd>
               <dd class="award" v-if="profileList.career_award.length > 0">
                 <em>경력/수상</em>{{ profileList.career_award[0].content }}
@@ -53,21 +53,21 @@
               </dd>
               <dd>
                 <em>공지사항</em>
-                <a href="javascript:void(0);" @click="goNotice(profileList.user_id, profileList.station_no, profileList.bbs_no, profileList.title_no)" target="_blank">●</a>
+                <a href="javascript:void(0);" @click="goNotice(profileList.user_id, profileList.station_no, profileList.bbs_no, profileList.title_no)" target="_blank">{{ profileList.notice }}</a>
               </dd>
             </dl>
           </div>
           <div class="medal" id="divMedal">
             <dl>
               <dt>수상메달</dt>
-                <dd v-for="oData in profileList.award_medal.slice(0, 5)" v-bind:key="oData" :class="profileContent[oData.type].class">{{ profileContent[oData.type].content }}</dd>
+                <dd v-for="oData in profileList.award_medal.slice(profileAward.start, profileAward.end)" v-bind:key="oData" :class="profileContent[oData.type].class">{{ profileContent[oData.type].content }}</dd>
               </dl><div class="medal_pg">
                 <span class="pg_no">
-                  <strong>1</strong>/2
+                  <strong>{{ profileAward.curPage }}</strong>/{{ profileAward.totalPage }}
                 </span> <!--_n 비활성화-->
                 <span class="btn_page">
-                  <a href="javascript:;" class="btn prev_n">이전</a>
-                  <a href="javascript:;" class="btn next">다음</a>
+                  <a href="javascript:;" :class="[profileAward.prevActive ? 'prev' : 'prev_n' , 'btn']" @click="moveMedal('prev')">이전</a>
+                  <a href="javascript:;" :class="[profileAward.nextActive ? 'next' : 'next_n', 'btn']" @click="moveMedal('next')">다음</a>
                 </span>
               </div>
             </div>
@@ -92,16 +92,28 @@
 </template>
 
 <script>
+import { VueSlideToggle } from 'vue-slide-toggle'
+
 export default {
   name: 'TotalSearch',
+  components: {
+    VueSlideToggle
+  }
   data () {
     return {
-      msg: 'Welcome to Your Vue.js Appqwe',
       totalCnt: 0,
       keyword: '',
       profile: false,
       profileList: '',
-      profileAward: false,
+      profileAward: {
+        expose: false,
+        start: 0,
+        end: 5,
+        curPage: 1,
+        totalPage: 1,
+        prevActive: false,
+        nextActive: false
+      },
       profileContent: ''
     }
   },
@@ -136,6 +148,14 @@ export default {
         if (res.data.PROFILE.length !== 0) {
           this.profile = true
           this.profileList = res.data.PROFILE[0]
+          // 메달 세팅
+          if (this.profileList.award_medal.length !== 0) {
+            this.profileAward.expose = 0
+            this.profileAward.totalPage = Math.floor(this.profileList.award_medal.length / 5) + 1
+            if (this.profileAward.totalPage > 1) {
+              this.profileAward.nextActive = true
+            }
+          }
         }
       })
     },
@@ -152,15 +172,14 @@ export default {
       oNewWindow.location.href = '//bj.afreecatv.com/' + 'pjh08190819' + '/setting/profile'
     },
     awardListToggle () {
-      this.profileAward = !this.profileAward
+      this.profileAward.expose = !this.profileAward.expose
 
       let oAwardList = document.getElementById('divAwardList')
-      if (this.profileAward) {
+      if (this.profileAward.expose) {
         oAwardList.style.display = 'block'
       } else {
         oAwardList.style.display = 'none'
       }
-      console.log(this.profileAward)
     },
     awardContentSetting () {
       this.profileContent = {
@@ -245,6 +264,32 @@ export default {
           content: '2019 뮤즈BJ'
         }
       }
+    },
+    moveMedal (szAction) {
+      if (szAction === 'prev') {
+        if (this.profileAward.curPage > 1) {
+          this.profileAward.start -= 5
+          this.profileAward.end -= 5
+          this.profileAward.curPage -= 1
+          this.profileAward.nextActive = true
+          if (this.profileAward.curPage === 1) {
+            this.profileAward.prevActive = false
+          }
+        }
+      } else if (szAction === 'next') {
+        if (this.profileAward.curPage < this.profileAward.totalPage) {
+          this.profileAward.start += 5
+          this.profileAward.end += 5
+          this.profileAward.curPage += 1
+          this.profileAward.prevActive = true
+          if (this.profileAward.curPage === this.profileAward.totalPage) {
+            this.profileAward.nextActive = false
+          }
+        }
+      }
+    },
+    favorite (szBjId) {
+      console.log('추가예정')
     }
   }
 }
