@@ -107,11 +107,16 @@ export default {
       location.href = '//search.afreecatv.com?keyword=' + keyword
     },
     setting () {
+      // 키워드 세팅
       this.keyword = this.$route.query.keyword
+      // 탭 세팅
       let szTab = this.$route.path.replace('/', '')
       szTab = szTab === '' ? 'totalSearch' : szTab
-
       this.$store.dispatch('callSetCurrentTab', { tab: szTab })
+      // 접속 ID 세팅
+      let aUserInfo = this.$cookie.get('PdboxUser').split('&')
+      let aUserId = aUserInfo[0].split('=')
+      this.$store.dispatch('callSetUserId', { userId: aUserId[1] })
     },
     searchUrl (szKeyword) {
       return '?keyword=' + encodeURIComponent(szKeyword)

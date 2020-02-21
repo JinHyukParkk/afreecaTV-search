@@ -12,7 +12,8 @@ export default new Vuex.Store({
       post: '',
       bj: '',
       current: ''
-    }
+    },
+    userId: ''
   },
   mutations: {
     changeTab (state, tab) {
@@ -23,6 +24,9 @@ export default new Vuex.Store({
     },
     setCurrentTab (state, tab) {
       state.onTab.current = tab
+    },
+    setUserId (state, userId) {
+      state.userId = userId
     }
   },
   actions: {
@@ -31,6 +35,9 @@ export default new Vuex.Store({
     },
     callSetCurrentTab ({ state, commit }, { tab }) {
       commit('setCurrentTab', tab)
+    },
+    callSetUserId ({ state, commit }, { userId }) {
+      commit('setUserId', userId)
     }
   },
   getters: {

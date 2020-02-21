@@ -10,7 +10,7 @@
         <div class="detail">
           <div class="pr">
             <div class="img_thum">
-              <img :src="profileList.img_file" width="200" height="150" alt="" onerror="//res.afreecatv.com/images/main_new/@thum_s_104x76.gif">
+              <img :src="profileList.img_file" alt="" onerror="//res.afreecatv.com/images/main_new/@thum_s_104x76.gif">
               <p>
                 <a href="javascript:void(0);" @click="favorite(profileList.user_id)">
                   <img src="//res.afreecatv.com/images/aftv_search/btn_fa.gif" class="btn_f" alt="즐겨찾기">
@@ -92,13 +92,8 @@
 </template>
 
 <script>
-import { VueSlideToggle } from 'vue-slide-toggle'
-
 export default {
   name: 'TotalSearch',
-  components: {
-    VueSlideToggle
-  }
   data () {
     return {
       totalCnt: 0,
@@ -169,7 +164,7 @@ export default {
     },
     goProfile () {
       let oNewWindow = window.open('about:blank')
-      oNewWindow.location.href = '//bj.afreecatv.com/' + 'pjh08190819' + '/setting/profile'
+      oNewWindow.location.href = '//bj.afreecatv.com/' + this.$store.state.userId + '/setting/profile'
     },
     awardListToggle () {
       this.profileAward.expose = !this.profileAward.expose
@@ -289,7 +284,21 @@ export default {
       }
     },
     favorite (szBjId) {
-      console.log('추가예정')
+      let params = {}
+      params['szWork'] = 'ADD'
+      params['szBjId'] = this.$store.state.userId
+      params['favorite'] = szBjId
+
+      this.$http.get('//live.afreecatv.com/afreeca/favorite_api.php', {
+        params: params,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true
+      }).then((res) => {
+        console.log(res.data)
+        alert(res.data.MSG)
+      })
     }
   }
 }
