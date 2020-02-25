@@ -75,7 +75,7 @@
         <a href="javascript:;" class="profile_edit" @click="goProfile">내 프로필 수정</a>
       </div>
     </div>
-    <div id="broad_order_sec" class="tit_area" style="">
+    <div id="broad_order_sec" class="tit_area" style="" v-if="broad">
       <h4 id="broad_title_text"><a href="javascript:;">생방송</a><span id="broad_cnt">({{ liveCnt }})</span><img src="//res.afreecatv.com/images/aftv_search/ico_live.gif" alt="live"></h4>
       <div class="select_v">
           <a href="javascript:;" class="v" id="broad_order_text"><strong>정확도순</strong><em></em></a>
@@ -88,12 +88,18 @@
           </ul>
       </div>
     </div>
+    <NoData></NoData>
   </div>
 </template>
 
 <script>
+import NoData from '@/components/NoData'
+
 export default {
   name: 'TotalSearch',
+  components: {
+    'NoData': NoData
+  },
   data () {
     return {
       totalCnt: 0,
@@ -109,7 +115,8 @@ export default {
         prevActive: false,
         nextActive: false
       },
-      profileContent: ''
+      profileContent: '',
+      broad: false
     }
   },
   filters: {

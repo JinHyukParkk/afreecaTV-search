@@ -31,23 +31,26 @@ func Init() *echo.Echo {
 
 	searchapi.GET("/test", api.Test)
 	searchapi.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "API")
+		return c.String(http.StatusOK, "searchAPI")
 	})
 
 	// e.Debug()
 
-	e := echo.New()
+	test := echo.New()
 	// Set Bundle MiddleWare
-	e.Use(echoMw.Logger())
-	e.Use(echoMw.Recover())
-	e.Use(echoMw.Gzip())
-	e.Use(echoMw.CORSWithConfig(echoMw.CORSConfig{
+	test.Use(echoMw.Logger())
+	test.Use(echoMw.Recover())
+	test.Use(echoMw.Gzip())
+	test.Use(echoMw.CORSWithConfig(echoMw.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAcceptEncoding},
 	}))
 
+	//SubDomain
+	hosts["test.afreecatv.com:8080"] = &Host{test}
+
 	//HTTP Error Handler
-	e.HTTPErrorHandler = customHTTPErrorHandler
+	test.HTTPErrorHandler = customHTTPErrorHandler
 
 
 	// e.SetHTTPErrorHandler(handler.JSONHTTPErrorHandler)
@@ -56,19 +59,35 @@ func Init() *echo.Echo {
 	// e.Use(myMw.TransactionHandler(db.Init()))
 
 	// Routes
-	v1 := e.Group("/api/v1")
+	v1 := test.Group("/api/v1")
 	{
 		// v1.POST("/search", api.PostMember())
 		v1.GET("/search", api.GetList)
 		// v1.GET("/members/:id", api.GetMember())
 	}
 
-	e.GET("/test", api.Test)
-	e.GET("/test1", api.Test1())
-	e.GET("/ping", func(c echo.Context) error {
-        return c.String(200, "test")
+	test.GET("/test", api.Test)
+	test.GET("/test1", api.Test1())
+	test.GET("/", func(c echo.Context) error {
+        return c.String(200, "Test")
 	})
-	
+
+	// Server
+	e := echo.New()
+
+	e.Any("/*", func(c echo.Context) (err error) {
+		req := c.Request()
+		res := c.Response()
+		host := hosts[req.Host]
+
+		if host == nil {
+			err = echo.ErrNotFound
+		} else {
+			host.Echo.ServeHTTP(res, req)
+		}
+		return
+	})
+
 	return e
 }
 

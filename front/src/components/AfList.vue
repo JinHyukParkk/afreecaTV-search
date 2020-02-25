@@ -9,6 +9,7 @@
             </li>
           </ul>
         </div>
+        <!--라우터 컴포넌트-->
         <router-view/>
       </div>
       <div class="aside">
@@ -58,9 +59,9 @@ export default {
       relatedList: '',
       tag: false,
       tagList: '',
-      hot: true,
+      hot: false,
       hotList: '',
-      recommend: true,
+      recommend: false,
       recommendList: '',
       keyword: '',
       liveCnt: 0

@@ -6,7 +6,7 @@
       </h3>
       <fieldset>
         <legend>검색 폼</legend>
-        <input type="text" v-model="keyword" name="szKeyword" id="szKeyword" title="검색어 입력" class="search_bar" @keyup="autoJaso" @click=checkLive(keyword)>
+        <input type="text" v-model="keyword" name="szKeyword" id="szKeyword" title="검색어 입력" class="search_bar" @keyup="autoJaso" @click="autoJaso" />
         <a title="검색" class="btn_search" @click="search(keyword)">검색</a>
         <!-- 자동 완성 -->
         <div class="sear_auto" id="divSearchAuto" v-if="auto" v-click-outside="hide">
@@ -18,12 +18,21 @@
         </div>
         <!-- 최근 검색어 -->
         <div class="mysch" v-if="mysch" v-click-outside="hide">
-          {{ list }}
+          <p class="stitle">최근 검색어</p>
+          <ul v-for="szKey in list" v-bind:key="szKey">
+            <li>
+              <a :href="searchUrl(szKey)">
+                <span class="tit">{{ szKey }}</span>
+              </a>
+              <button class="del" @click="deleteKeyword(szKey)"></button>
+            </li>
+          </ul>
+          <p class="alldel"><a href="javascript:void(0);" @click="deleteCookie('_sck')">전체삭제</a></p>
         </div>
         <!-- 실시간 검색어 -->
-        <div class="livesch" v-if="live" v-click-outside="hide">
+        <div class="livesch" v-if="!mysch && live" v-click-outside="hide">
           <p class="stitle">실시간 인기 검색어</p>
-          <ul  v-for="(oData, nIndex) in list" v-bind:key="oData">
+          <ul v-for="(oData, nIndex) in list" v-bind:key="oData">
             <li>
               <a :href="searchUrl(oData.keyword)">
               <em>{{ (nIndex+1) }}</em>
@@ -76,7 +85,7 @@ export default {
     autoJaso (e) {
       let szKeyword = e.target.value
       if (!szKeyword) {
-        this.checkLive()
+        this.checkKeyword(szKeyword)
         return false
       }
       // 방향키
@@ -99,9 +108,26 @@ export default {
         }).then((res) => {
           this.list = res.data.list
           this.live = false
+          this.mysch = false
           this.auto = true
         })
       }
+    },
+    liveKeyword (szKeyword) {
+      let params = {}
+      params['m'] = 'hotKeyword'
+      params['v'] = '1.0'
+      params['t'] = 'json'
+      params['c'] = 'UTF-8'
+
+      this.$http.get('//scketc.afreecatv.com/api.php', {
+        params: params
+      }).then((res) => {
+        this.list = res.data.HOT
+        this.auto = false
+        this.mysch = false
+        this.live = true
+      })
     },
     search (keyword) {
       location.href = '//search.afreecatv.com?keyword=' + keyword
@@ -115,28 +141,30 @@ export default {
       this.$store.dispatch('callSetCurrentTab', { tab: szTab })
       // 접속 ID 세팅
       let aUserInfo = this.$cookie.get('PdboxUser').split('&')
+      this.$cookie.delete('theme', 0)
       let aUserId = aUserInfo[0].split('=')
       this.$store.dispatch('callSetUserId', { userId: aUserId[1] })
     },
     searchUrl (szKeyword) {
       return '?keyword=' + encodeURIComponent(szKeyword)
     },
-    checkLive (szKeyword) {
-      if (szKeyword) {
-      } else {
-        let params = {}
-        params['m'] = 'hotKeyword'
-        params['v'] = '1.0'
-        params['t'] = 'json'
-        params['c'] = 'UTF-8'
+    checkKeyword (szKeyword) {
+      try {
+        let szCKKeyword = this.getCookie('_csk')
+        // 최근 검색어 구분자
+        let szReg = String.fromCharCode(12)
 
-        this.$http.get('//scketc.afreecatv.com/api.php', {
-          params: params
-        }).then((res) => {
-          this.list = res.data.HOT
+        if (szCKKeyword !== false) {
+          let aData = szCKKeyword.split(szReg)
+          this.list = aData
+          this.live = false
           this.auto = false
-          this.live = true
-        })
+          this.mysch = true
+        } else {
+          this.liveKeyword()
+        }
+      } catch (e) { // catches a malformed URI
+        console.log(e)
       }
     },
     liveKeywordList (szUpdown, szShowText) {
@@ -150,7 +178,16 @@ export default {
         }
       }
     },
+    deleteKeyword (szKey) {
+      console.log(szKey)
+    },
+    deleteCookie (szName) {
+      console.log(szName)
+      console.log(this.$cookie)
+      this.$cookie.delete('theme', 0)
+    },
     hide () {
+      console.log('!!')
       this.auto = false
       this.live = false
       this.mysch = false
@@ -162,16 +199,34 @@ export default {
           keyword: this.keyword
         }
       }
+    },
+    getCookie (name) {
+      let srch = name + '='
+      if (document.cookie.length > 0) {
+        let offset = document.cookie.indexOf(srch)
+        if (offset !== -1) {
+          offset += srch.length
+          let end = document.cookie.indexOf(';', offset)
+          if (end === -1) {
+            end = document.cookie.length
+          }
+          return unescape(document.cookie.substring(offset, end))
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
     }
   },
   created: function () {
     this.setting()
   },
   mounted: function () {
-    this.$el.addEventListener('click', this.hide)
+    // this.$el.addEventListener('click', this.hide)
   },
   beforeDestroy: function () {
-    this.$el.removeEventListener('click', this.hide)
+    // this.$el.removeEventListener('click', this.hide)
     // document.removeEventListener('click', this.onClick)
   }
 }
@@ -228,7 +283,9 @@ body.thema_dark #search_content .search_area h3, body.thema_dark #search_content
   height: 37px;
   margin: 0 auto 0;
   margin-bottom: 20px;
-
+}
+.img_thum img {
+  length: 150px;
 }
 #menu {
   margin: 0 auto 0;
