@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
-import VueCookie from 'vue-cookie'
+import VueCookies from 'vue-cookies'
 import 'es6-promise/auto'
 import TotalSearch from '@/components/tab/TotalSearch'
 import Live from '@/components/tab/Live'
@@ -11,7 +11,7 @@ import Bj from '@/components/tab/Bj'
 
 Vue.use(Router)
 Vue.use(Vuex)
-Vue.use(VueCookie)
+Vue.use(VueCookies)
 
 export default new Router({
   mode: 'history',

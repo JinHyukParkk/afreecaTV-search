@@ -27,7 +27,7 @@
               <button class="del" @click="deleteKeyword(szKey)"></button>
             </li>
           </ul>
-          <p class="alldel"><a href="javascript:void(0);" @click="deleteCookie('_sck')">전체삭제</a></p>
+          <p class="alldel"><a href="javascript:void(0);" @click="deleteCookie('_csk')">전체삭제</a></p>
         </div>
         <!-- 실시간 검색어 -->
         <div class="livesch" v-if="!mysch && live" v-click-outside="hide">
@@ -85,14 +85,14 @@ export default {
     autoJaso (e) {
       let szKeyword = e.target.value
       if (!szKeyword) {
-        this.checkKeyword(szKeyword)
+        this.checkKeyword()
         return false
       }
       // 방향키
       var aDirectionCode = [37, 38, 30, 40]
       if (aDirectionCode.includes(e.which)) {
       } else if (e.which === 13) {
-        location.href = '//search.afreecatv.com?keyword=' + e.target.value
+        this.search(e.target.value)
       } else {
         let params = {}
         params['m'] = 'autoJaso'
@@ -130,7 +130,10 @@ export default {
       })
     },
     search (keyword) {
-      location.href = '//search.afreecatv.com?keyword=' + keyword
+      // 최근 검색어 추가
+      this.sckCookie(keyword, 'add')
+      // 검색
+      location.href = '?keyword=' + keyword
     },
     setting () {
       // 키워드 세팅
@@ -140,31 +143,40 @@ export default {
       szTab = szTab === '' ? 'totalSearch' : szTab
       this.$store.dispatch('callSetCurrentTab', { tab: szTab })
       // 접속 ID 세팅
-      let aUserInfo = this.$cookie.get('PdboxUser').split('&')
-      this.$cookie.delete('theme', 0)
+      let aUserInfo = this.$cookies.get('PdboxUser').split('&')
+
       let aUserId = aUserInfo[0].split('=')
       this.$store.dispatch('callSetUserId', { userId: aUserId[1] })
     },
     searchUrl (szKeyword) {
       return '?keyword=' + encodeURIComponent(szKeyword)
     },
-    checkKeyword (szKeyword) {
+    checkKeyword () {
       try {
-        let szCKKeyword = this.getCookie('_csk')
-        // 최근 검색어 구분자
-        let szReg = String.fromCharCode(12)
-
-        if (szCKKeyword !== false) {
-          let aData = szCKKeyword.split(szReg)
-          this.list = aData
-          this.live = false
-          this.auto = false
-          this.mysch = true
+        if (this.recentKeyword()) {
         } else {
           this.liveKeyword()
         }
       } catch (e) { // catches a malformed URI
         console.log(e)
+      }
+    },
+    recentKeyword () {
+      let szCKKeyword = this.getCookie('_csk')
+      console.log(szCKKeyword)
+      console.log(szCKKeyword !== '')
+      // 최근 검색어 구분자
+      let szReg = String.fromCharCode(12)
+
+      if (szCKKeyword !== false || szCKKeyword !== '') {
+        let aData = szCKKeyword.split(szReg)
+        this.list = aData
+        this.live = false
+        this.auto = false
+        this.mysch = true
+        return true
+      } else {
+        return false
       }
     },
     liveKeywordList (szUpdown, szShowText) {
@@ -178,16 +190,16 @@ export default {
         }
       }
     },
-    deleteKeyword (szKey) {
-      console.log(szKey)
+    deleteKeyword (keyword) {
+      this.sckCookie(keyword, 'delete')
+      this.checkKeyword()
     },
-    deleteCookie (szName) {
-      console.log(szName)
-      console.log(this.$cookie)
-      this.$cookie.delete('theme', 0)
+    deleteCookie (szKey) {
+      var expireDate = new Date()
+      expireDate.setDate(expireDate.getDate() - 1)
+      this.setCookie('_csk', '', '.afreecatv.com', expireDate)
     },
     hide () {
-      console.log('!!')
       this.auto = false
       this.live = false
       this.mysch = false
@@ -217,6 +229,46 @@ export default {
       } else {
         return false
       }
+    },
+    setCookie (name, value, domain, expiredays) {
+      var todayDate = new Date()
+      todayDate.setDate(todayDate.getDate() + expiredays)
+      document.cookie = name + '=' + escape(value) + '; path=/; expires=' + todayDate.toGMTString() + '; domain=' + domain + ';'
+    },
+    sckCookie (szKeyword, szMode) {
+      let szCKKeyword = this.getCookie('_csk')
+      if (szCKKeyword === null) {
+        szCKKeyword = ''
+      }
+
+      let expireDate = new Date()
+      expireDate.setDate(expireDate.getDate() - 1)
+
+      let szReg = String.fromCharCode(12)
+
+      szCKKeyword = unescape(szCKKeyword)
+      if (szCKKeyword !== '') {
+        let aData = szCKKeyword.split(szReg)
+
+        console.log(szKeyword)
+        aData.forEach(function (szKey) {
+          console.log(szKey)
+          if (szKey === szKeyword) {
+            aData.splice(szKey, 1)
+          }
+        })
+
+        let aSaveData = ''
+        aSaveData = (szMode === 'delete' ? [].concat(aData) : [szKeyword].concat(aData))
+        szCKKeyword = aSaveData.join(szReg)
+      }
+
+      if (szCKKeyword === szReg) {
+        // 구분자만 남았을때  키 삭제[_csk]
+        this.deleteCookie('_csk')
+      }
+
+      this.setCookie('_csk', szCKKeyword, '.afreecatv.com', expireDate)
     }
   },
   created: function () {
