@@ -163,12 +163,11 @@ export default {
     },
     recentKeyword () {
       let szCKKeyword = this.getCookie('_csk')
-      console.log(szCKKeyword)
-      console.log(szCKKeyword !== '')
+
       // 최근 검색어 구분자
       let szReg = String.fromCharCode(12)
 
-      if (szCKKeyword !== false || szCKKeyword !== '') {
+      if (szCKKeyword && szCKKeyword.trim() !== '') {
         let aData = szCKKeyword.split(szReg)
         this.list = aData
         this.live = false
@@ -198,6 +197,7 @@ export default {
       var expireDate = new Date()
       expireDate.setDate(expireDate.getDate() - 1)
       this.setCookie('_csk', '', '.afreecatv.com', expireDate)
+      this.checkKeyword()
     },
     hide () {
       this.auto = false
@@ -247,17 +247,17 @@ export default {
       let szReg = String.fromCharCode(12)
 
       szCKKeyword = unescape(szCKKeyword)
-      if (szCKKeyword !== '') {
-        let aData = szCKKeyword.split(szReg)
+      if (szKeyword) {
+        let aData = []
+        if (szCKKeyword !== '') {
+          aData = szCKKeyword.split(szReg)
 
-        console.log(szKeyword)
-        aData.forEach(function (szKey) {
-          console.log(szKey)
-          if (szKey === szKeyword) {
-            aData.splice(szKey, 1)
-          }
-        })
-
+          aData.forEach(function (szKey) {
+            if (szKey === szKeyword) {
+              aData.splice(szKey, 1)
+            }
+          })
+        }
         let aSaveData = ''
         aSaveData = (szMode === 'delete' ? [].concat(aData) : [szKeyword].concat(aData))
         szCKKeyword = aSaveData.join(szReg)
