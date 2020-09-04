@@ -1,4 +1,4 @@
-# randomProject
+# afreecaTV_search
 
 ## 1. 주제
 ### 아프리카TV 검색
