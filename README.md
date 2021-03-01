@@ -1,4 +1,13 @@
-# test
+# afreecaTV_search
+
+## 1. 주제
+### 아프리카TV 검색 리팩토링
+
+## 2. 개발환경
+### 프론트앤드
+- OS : CentOS7
+- 웹서버 : Nginx
+- 개발언어 : javascript(Vue.js)
 
 > A Vue.js project
 
